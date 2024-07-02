@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Classifier</title>
+</head>
+<body>
+    <h1>Upload an image to classify the vehicle</h1>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+
+    {% if prediction %}
+        <h2>Prediction: {{ prediction }}</h2>
+        <h3>Probabilities:</h3>
+        <ul>
+            <li>Sedan: {{ '%.5f' % probabilities[0][0] }}</li>
+            <li>SUV: {{ '%.5f' % probabilities[0][1] }}</li>
+            <li>Truck: {{ '%.5f' % probabilities[0][2] }}</li>
+        </ul>
+        {% if image_path %}
+        <img src="{{ url_for('static', filename='uploads/' + image_path) }}" alt="Uploaded Image" width="300">
+        {% endif %}
+    {% endif %}
+</body>
+</html>
+
+
