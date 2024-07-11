@@ -61,6 +61,6 @@ history = model.fit(
 )
 
 # Save the model
-model.save('vehicle_classifier_model.h5')
+model.save('vehicle_classifier_model_3.0.h5')
 print("Model saved to disk.")
 

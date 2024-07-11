@@ -13,7 +13,7 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # Load the model
-model = load_model('vehicle_classifier_model.h5')
+model = load_model('vehicle_classifier_model_3.0.h5')
 
 # Function to predict the class of the uploaded image
 def predict_image(img_path):

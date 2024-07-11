@@ -4,7 +4,7 @@ from tensorflow.keras.preprocessing import image
 import numpy as np
 
 # Load the model
-model = load_model('vehicle_classifier_model.h5')
+model = load_model('vehicle_classifier_model_3.0.h5')
 print("Model loaded from disk.")
 
 # Make a prediction on a new image
