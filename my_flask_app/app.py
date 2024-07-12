@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-import tflite_runtime.interpreter as interpreter_wrapper
+from tensorflow.lite.python import interpreter as interpreter_wrapper
 import numpy as np
 import os
 from PIL import Image
