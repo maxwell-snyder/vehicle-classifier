@@ -1,8 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for
-from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
 import os
+import tensorflow as tf
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
@@ -12,8 +12,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Load the model
-model = load_model('vehicle_classifier_model_3.0.h5')
+# Load the TFLite model
+interpreter = tf.lite.Interpreter(model_path='vehicle_classifier_model_3.0_quantized.tflite')
+interpreter.allocate_tensors()
 
 # Function to predict the class of the uploaded image
 def predict_image(img_path):
@@ -22,8 +23,15 @@ def predict_image(img_path):
     img_array = np.expand_dims(img_array, axis=0)
     img_array = img_array / 255.0  # Rescale to [0, 1]
 
-    predictions = model.predict(img_array)
-    class_indices = {'sedan': 0, 'SUV': 1, 'truck': 2}
+    # Set up the input and output tensors
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+    
+    interpreter.set_tensor(input_details[0]['index'], img_array)
+    interpreter.invoke()
+    predictions = interpreter.get_tensor(output_details[0]['index'])
+    
+    class_indices = {'SUV': 0, 'Sedan': 1, 'Truck': 2}
     class_names = list(class_indices.keys())
     predicted_class = class_names[np.argmax(predictions)]
     rounded_predictions = np.round(predictions, decimals=5)  # Round to 5 decimal places
@@ -46,9 +54,5 @@ def index():
     return render_template('index.html', prediction=None, probabilities=None, image_path=None)
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-   

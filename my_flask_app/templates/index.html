@@ -16,8 +16,8 @@
         <h2>Prediction: {{ prediction }}</h2>
         <h3>Probabilities:</h3>
         <ul>
-            <li>Sedan: {{ '%.5f' % probabilities[0][0] }}</li>
-            <li>SUV: {{ '%.5f' % probabilities[0][1] }}</li>
+            <li>Sedan: {{ '%.5f' % probabilities[0][1] }}</li>
+            <li>SUV: {{ '%.5f' % probabilities[0][0] }}</li>
             <li>Truck: {{ '%.5f' % probabilities[0][2] }}</li>
         </ul>
         {% if image_path %}
