@@ -1,8 +1,8 @@
 from flask import Flask, request, render_template, redirect, url_for
-from tensorflow.keras.preprocessing import image
+from tensorflow.lite.python import interpreter as interpreter_wrapper
 import numpy as np
 import os
-import tensorflow as tf
+from PIL import Image
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
@@ -13,24 +13,25 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 # Load the TFLite model
-interpreter = tf.lite.Interpreter(model_path='vehicle_classifier_model_3.0_quantized.tflite')
+interpreter = interpreter_wrapper.Interpreter(model_path="vehicle_classifier_model_3.0_quantized.tflite")
 interpreter.allocate_tensors()
 
 # Function to predict the class of the uploaded image
 def predict_image(img_path):
-    img = image.load_img(img_path, target_size=(150, 150))
-    img_array = image.img_to_array(img)
+    img = Image.open(img_path)
+    img = img.resize((150, 150))  # Resize image to target size
+    img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array = img_array / 255.0  # Rescale to [0, 1]
 
-    # Set up the input and output tensors
+    # Perform inference with TensorFlow Lite model
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-    
-    interpreter.set_tensor(input_details[0]['index'], img_array)
+
+    interpreter.set_tensor(input_details[0]['index'], img_array.astype(np.float32))
     interpreter.invoke()
     predictions = interpreter.get_tensor(output_details[0]['index'])
-    
+
     class_indices = {'SUV': 0, 'Sedan': 1, 'Truck': 2}
     class_names = list(class_indices.keys())
     predicted_class = class_names[np.argmax(predictions)]
