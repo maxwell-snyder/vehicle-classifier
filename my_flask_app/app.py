@@ -3,6 +3,7 @@ import tflite_runtime.interpreter as interpreter_wrapper
 import numpy as np
 import os
 from PIL import Image
+import logging
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
@@ -11,6 +12,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Ensure the upload folder exists
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
 # Load the TFLite model
 interpreter = interpreter_wrapper.Interpreter(model_path="vehicle_classifier_model_3.0_quantized.tflite")
@@ -40,22 +44,25 @@ def predict_image(img_path):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    app.logger.info('Received request with method: %s', request.method)
     if request.method == 'POST':
         if 'file' not in request.files:
+            app.logger.warning('No file part in the request')
             return redirect(request.url)
         file = request.files['file']
         if file.filename == '':
+            app.logger.warning('No selected file')
             return redirect(request.url)
         if file:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(file_path)  # Save the uploaded file to UPLOAD_FOLDER
             predicted_class, predictions = predict_image(file_path)
+            app.logger.info('Prediction: %s, Probabilities: %s', predicted_class, predictions)
             return render_template('index.html', prediction=predicted_class, probabilities=predictions.tolist(), image_path=file.filename)
-
+    else:
+        app.logger.info('Rendering the index page')
+        
     return render_template('index.html', prediction=None, probabilities=None, image_path=None)
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
