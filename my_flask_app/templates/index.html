@@ -4,27 +4,122 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vehicle Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            color: #007bff; /* Changed color to match "by Max Snyder" */
+        }
+        header h2 {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: normal;
+            color: #007bff; /* Changed color to match "by Max Snyder" */
+        }
+        header img {
+            width: 70px; /* Increased image size */
+            height: 70px; /* Increased image size */
+            border-radius: 50%;
+            margin-left: 20px;
+        }
+        main {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #343a40;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            color: #007bff;
+            margin: 2.5em;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #e9ecef;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        img {
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload an image to classify the vehicle</h1>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
+    <header>
+        <div>
+            <h1>Vehicle Classifier</h1>
+            <h2>by Max Snyder</h2>
+        </div>
+        <img src="{{ url_for('static', filename='frog_image.jpg') }}" alt="Logo">
+    </header>
+    <main>
+        <h2>Upload an image to classify the vehicle as a Sedan, SUV, or Truck</h2>
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*">
+            <input type="submit" value="Upload">
+        </form>
 
-    {% if prediction %}
-        <h2>Prediction: {{ prediction }}</h2>
-        <h3>Probabilities:</h3>
-        <ul>
-            <li>Sedan: {{ '%.5f' % probabilities[0][1] }}</li>
-            <li>SUV: {{ '%.5f' % probabilities[0][0] }}</li>
-            <li>Truck: {{ '%.5f' % probabilities[0][2] }}</li>
-        </ul>
-        {% if image_path %}
-        <img src="{{ url_for('static', filename='uploads/' + image_path) }}" alt="Uploaded Image" width="300">
+        {% if prediction %}
+            <h2>Prediction: {{ prediction }}</h2>
+            <h3>Probabilities:</h3>
+            <ul>
+                <li>Sedan: {{ '%.5f' % probabilities[0][1] }}</li>
+                <li>SUV: {{ '%.5f' % probabilities[0][0] }}</li>
+                <li>Truck: {{ '%.5f' % probabilities[0][2] }}</li>
+            </ul>
+            {% if image_path %}
+            <img src="{{ url_for('static', filename='uploads/' + image_path) }}" alt="Uploaded Image" width="300">
+            {% endif %}
         {% endif %}
-    {% endif %}
+    </main>
 </body>
 </html>
-
-
