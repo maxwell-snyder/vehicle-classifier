@@ -13,6 +13,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
         header {
             width: 100%;
@@ -91,6 +92,23 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            text-align: right;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        footer p {
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -121,5 +139,9 @@
             {% endif %}
         {% endif %}
     </main>
+    <footer>
+        <p>Check out the project on GitHub:</p>
+        <a href="https://github.com/yourusername/yourrepository" target="_blank">GitHub Project</a>
+    </footer>
 </body>
 </html>
