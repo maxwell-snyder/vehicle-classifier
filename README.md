@@ -36,6 +36,6 @@ This is my first project. I am 17 years old and have little to no coding experie
    ```sh
    git push heroku master
 
- - At the end, it should give you a link to a website that looks like mine but is using your data.
+At the end, it should give you a link to a website that looks like mine but is using your data.
 If you get an error message, you can put it into ChatGPT with context, and it should help you work through it or assist you in redesigning the website in the index.html file.
 
