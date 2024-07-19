@@ -36,7 +36,7 @@ This is my first project. I am 17 years old and have little to no coding experie
 8. **Push to Heroku**
    - Download Heroku and create an account.
    - Go to the `app.py` file, change the model to the quantized one.
-   - Push it to Heroku using this command in the terminal (which you can access by pressing `Ctrl+``):
+   - Push it to Heroku using this command in the terminal which you can access by pressing `Ctrl+``
 
    ```sh
    git push heroku master
